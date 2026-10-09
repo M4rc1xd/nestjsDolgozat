@@ -1,12 +1,13 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, Query, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service.js';
 import { Product } from './productInterface.js';
+import { productDto } from './createProducts.dto.js';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  Products: Product[] = [
+  products: Product[] = [
   {
     "name": "Vezeték nélküli egér",
     "category": "elektronika",
@@ -72,15 +73,41 @@ export class AppController {
 
   @Get()
   @Render('index')
-  getHello() {
+  productKiiras() {
     return {
-      products: this.Products.toSorted((a, b) => a.price - b.price)
+      products: this.products.toSorted((a, b) => a.price - b.price)
     }
   }
 
-  // @Get("filter")
-  // @Render('filter')
-  // filter(@Query("category") category: string) {
+  @Get("filter")
+  @Render('filter')
+  szures(@Query("category") category: string) {
+    const filteredProducts = this.products.filter(product => product.category === category);
+    return {
+      products: filteredProducts
+      .filter(a=> a.category === category)
+      .toSorted((a,b) => a.price - b.price)
+    }
+  }
 
-  // }
+  @Get("new")
+  @Render('new')
+  newDataForm() {
+
+  }
+
+  @Post("new")
+  newData(@Body() body: productDto) {
+    const newProduct: Product = {
+      name: body.name,
+      category: body.category,
+      price: body.price,
+      stock: body.stock
+    }
+    this.products.push(newProduct);
+    return{
+      success: true,
+    }
+  }
+
 }
