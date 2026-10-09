@@ -96,6 +96,7 @@ export class AppController {
   }
 
   @Post("new")
+  @Render('new')
   newData(@Body() body: productDto) {
     const newProduct: Product = {
       name: body.name,
