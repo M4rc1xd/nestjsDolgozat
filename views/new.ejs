@@ -10,6 +10,7 @@
 <body>
     <a href="/">Foldal</a>
     <a href="/filter">szures</a>
+    <a href="/stats">statisztika</a>
 
     <form method="post">
         <label for "name">Name:</label>
@@ -22,7 +23,10 @@
         <input type="number" name="stock">
         <button type="submit">Submit</button>
     </form>
-    <p><% </p>
+    <p><% if (locals.success) {%>
+        Product added successfully!
+    <% } %>
+    </p>
     
 </body>
 </html>

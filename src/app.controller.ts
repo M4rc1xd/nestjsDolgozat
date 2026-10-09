@@ -82,10 +82,9 @@ export class AppController {
   @Get("filter")
   @Render('filter')
   szures(@Query("category") category: string) {
-    const filteredProducts = this.products.filter(product => product.category === category);
     return {
-      products: filteredProducts
-      .filter(a=> a.category === category)
+      products: this.products
+      .filter(a=> a.category == category)
       .toSorted((a,b) => a.price - b.price)
     }
   }
@@ -110,4 +109,40 @@ export class AppController {
     }
   }
 
+
+  @Get("stats")
+  @Render('stats')
+  stats() {
+    let totalStock = 0
+    for (const product of this.products) {
+      totalStock += product.stock;
+    }
+
+    let averagePrice = 0;
+    for (const product of this.products) {
+      averagePrice += product.price;
+    }
+    averagePrice /= this.products.length;
+
+    let mostExpensiveProduct = 0;
+    for (const product of this.products) {
+      if (product.price > mostExpensiveProduct) {
+        mostExpensiveProduct = product.price;
+      }
+    }
+
+    let leastExpensiveProduct = this.products[0].price;
+    for (const product of this.products) {
+      if (product.price < leastExpensiveProduct) {
+        leastExpensiveProduct = product.price;
+      }
+    }
+    return{
+      totalStock,
+      averagePrice,
+      mostExpensiveProduct,
+      leastExpensiveProduct
+
+    }
+  }
 }
